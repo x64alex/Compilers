@@ -1,0 +1,23 @@
+Alphabet:
+       a. Upper (A-Z) and lower case letters (a-z) of the English alphabet
+       b. Underline character '_';
+       c. Decimal digits (0-9);
+
+Lexic:
+       a.Special symbols, representing:
+              - operators: + - * / = < <= >= ==
+              - separators: () [ ] { } ; space
+              - reserved words: cat func main read write int string array while if else
+       b. identifiers
+              - a sequence of letters and  digits, such that the first character is a letter; the rule is:
+                     identifier = letter {digit | leter}
+                     letter ::= "a" | "b" | ... | "z" | "A" | "B" | ... | "Z"
+                     nonnulldigit ::=  "1" | "2" | ... | "9"
+                     digit ::=  "0" | nonnulldigit
+       c. constants
+              1. integer - rule
+                     noconst = nonnulldigit {digit} 
+              2. string
+                     char := letter|digit
+                     string := char{string}
+                     conststring := "string"

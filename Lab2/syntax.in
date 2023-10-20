@@ -1,0 +1,30 @@
+program := "func" "main" "(" ")" block
+ 
+primitiveType := "int" | "string"
+arrayType := "array" "(" primitiveType ")" "[" noconst "]"
+elementArray := IDENTIFIER "[" noconst "]"
+type := primitiveType | arrayType
+ 
+block := "{" stmtlist "}"
+stmtlist := stmt ";" | stmt ";" stmtlist
+stmt ::= simplstmt | structstmt
+
+simplstmt ::= assignstmt | iostmt | declarationstmt
+
+assignstmt := (IDENTIFIER | elementArray) "=" (expression | conststring | noconst)
+expression ::= expression ("+" | "-") term | term
+term ::= term ("*", "/", "%") factor | factor
+factor ::= "(" expression ")" | IDENTIFIER | noconst | elementArray
+
+iostmt ::= ("read" | "write") "(" IDENTIFIER ")"
+
+declarationstmt := "cat" IDENTIFIER "=" type
+
+
+structstmt ::= ifstmt | whilestmt
+ifstmt ::= "if" "(" condition ")" block ["else" block]
+whilestmt ::= "while" "(" condition ")" block
+
+condition ::= expression RELATION expression
+RELATION ::= "<" | "<=" | "==" | "<>" | ">=" | ">"
+
