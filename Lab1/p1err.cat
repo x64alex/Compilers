@@ -1,0 +1,7 @@
+// Lexical errors:
+// Error1
+cat 3num = 1234;    // spelling error as identifier 
+dog 3miau = 1234;   // Variable or constant declaration cannot start with a number
+
+// Error2
+cat x = 12$34; // lexical error as '$' doesn't belong within 0-9 range and 12&34 is not a string

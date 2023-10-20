@@ -1,0 +1,16 @@
+// this line represents a comment
+// dog declares a variable because dogs are not always cute
+// cat declares a constant because cats they are better than dogs
+// we do not have type because we determine it based on the declaration typed.
+
+// a, b, c given numbers and dunction min returns the minimum of those 3
+function min(a:number, b:number, c:number) {
+	dog minimum = a;
+	if(b<a && c<b){
+		minimum = c;
+	}
+	if(b<a && b<c){
+		minimum = a;
+	}
+	return minimum;
+}
