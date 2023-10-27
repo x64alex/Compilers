@@ -1,72 +1,74 @@
 class HashTable:
     # Separate chaining
 	def __init__(self, size):
-		self.size = size
-		self.hash_table = self.create_empty()
+		self.__size = size
+		self.__hash_table = [[] for _ in range(self.__size)]
 
-	def create_empty(self):
-		return [[] for _ in range(self.size)]
+	def get_size(self):
+		return self.__size
 
 	def __get_hash(self, key):
-        # h(x) = sum(x)^2 / len(x)
-		return sum(ord(char) for char in key) **2 // len(key)
+        # h(x) = (sum(x)^2 / len(x)) % size
+		return (sum(ord(char) for char in key) **2 // len(key)) % self.__size
+	
+	def exists(self, key):
+		hashed_key = self.__get_hash(key)
+		return key in self.__hash_table[hashed_key]
 
-	def insert(self, key, val):
-		hashed_key = self.__get_hash(key) % self.size
-		bucket = self.hash_table[hashed_key]
-		bucket.append((key, val))
+	def insert(self, key):
+		hashed_key = self.__get_hash(key)
+		bucket = self.__hash_table[hashed_key]
 
+		if self.exists(key) is False :
+			bucket.append(key)
+			position = bucket.index(key)
+			return (hashed_key, position)
+		return -1
 
 	def lookup(self, key):
-		hashed_key = self.__get_hash(key) % self.size
-		bucket = self.hash_table[hashed_key]
+		hashed_key = self.__get_hash(key)
+		bucket = self.__hash_table[hashed_key]
 
-		found_key = False
-		for index, record in enumerate(bucket):
-			record_key, record_val = record
-			
-			if record_key == key:
-				found_key = True
-				break
-
-		if found_key:
-			return record_val
+		if key in bucket:
+			position = bucket.index(key)
+			return (hashed_key, position)
 		else:
-			return "No record found"
+			return -1
 
-	def delete_value(self, key):
-		hashed_key = self.__get_hash(key) % self.size
-		bucket = self.hash_table[hashed_key]
+	def delete(self, key):
+		hashed_key = self.__get_hash(key)
+		bucket = self.__hash_table[hashed_key]
 
-		found_key = False
-		for index, record in enumerate(bucket):
-			record_key, record_val = record
-
-			if record_key == key:
-				found_key = True
-				break
-		if found_key:
-			bucket.pop(index)
-		return
+		if key in bucket:
+			position = bucket.index(key)
+			bucket.pop(position)
+			return (hashed_key, position)
+		else:
+			return -1
 
 	def __str__(self):
-		return "".join(str(item) for item in self.hash_table)
-
-# We will analyze the following program
-# int x;
-# string y;
-# bool z;
+		return "".join(str(item) for item in self.__hash_table)
 
 symbol_table = HashTable(10)
 
-# We execute the first line
-symbol_table.insert('x', 'int')
-symbol_table.insert('x', 'string')
+print("Insert " + "x" + " at position: " + str(symbol_table.insert('x')))
+print("Insert " + "xy" + " at position: " + str(symbol_table.insert('xy')))
+print("Insert " + "xy" + " at position: " + str(symbol_table.insert('xy')))
+print("Insert " + "xyz" + " at position: " + str(symbol_table.insert('xyz')))
+print("Insert " + "variable" + " at position: " + str(symbol_table.insert('variable')))
+print("Insert " + "miau" + " at position: " + str(symbol_table.insert('miau')))
 
-print(symbol_table)
-print(symbol_table.lookup('x'))
-print(symbol_table.lookup('y'))
-# We get int for x and no value for y because we have
+print()
+print("Contains " + "xy" + " at position: " + str(symbol_table.lookup('xy')))
+print("Remove " + "xy" + " at position: " + str(symbol_table.delete('xy')))
 
+print()
+print("Contains " + "variable" + " at position: " + str(symbol_table.lookup('variable')))
+print("Remove " + "variable" + " at position: " + str(symbol_table.delete('variable')))
 
+print()
+print("Contains " + "variable" + " at position: " + str(symbol_table.lookup('variable')))
+print("Remove " + "variable" + " at position: " + str(symbol_table.delete('variable')))
+
+print()
 print(symbol_table)
