@@ -1,0 +1,15 @@
+// this line represents a comment
+// cat declares a variable
+// we do not have type because we determine it based on the declaration typed.
+
+// a, b, c given numbers and dunction min returns the minimum of those 3
+function min ( a : number , b : number , c : number ) {
+	cat minimum = a
+	if ( b < a && c < b ) {
+		minimum = c
+	}
+	if ( b < a && b < c ) {
+		minimum = a
+	}
+	return minimum
+}
