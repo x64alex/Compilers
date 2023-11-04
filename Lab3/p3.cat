@@ -1,15 +1,14 @@
 // this line represents a comment
-// dog declares a variable because dogs are not always cute
 // cat declares a constant because cats they are better than dogs
 
 // array - given array of numbers and function min returns the sum
 function sum(numberArray: number[]) {
-	dog sum = 0;
-    dog index = 0;
+	cat sum = 0
+    cat index = 0
     while(index<numberArray.length()){
-        sum = sum + numberArray[index];
-        index = index + 1;
+        sum = sum + numberArray[index]
+        index = index + 1
     }
-    return sum;
+    return sum
 }
 

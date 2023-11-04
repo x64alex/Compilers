@@ -1,5 +1,4 @@
 import st
-import re
 
 def writePif(pif):
     pifFile = open("PIF.out", "w")
@@ -24,7 +23,7 @@ def writeFiles(pif, identifiersST, integerST, stringST):
     writeST(identifiersST, integerST, stringST)
 
 def scanner(programFile, tokenFile):
-    delimiters = [",", ":", "(", ")", ">", "<","<=", ">=", "{", "}",  "&&", "||", "%", "==", "!=", "+", "-"]
+    delimiters = [",", ":", "(", ")", ">", "<","<=", ">=", "{", "}",  "&&", "||", "%", "==", "!=", "+", "-", "[", "]", "."]
     tokens = []
     pif = []
     identifiersST = st.HashTable(10)
@@ -37,22 +36,42 @@ def scanner(programFile, tokenFile):
         else:
             tokens.append(token)
 
+
     for index, line in enumerate(programFile):
         string = line
         for delimiter in delimiters:
             string = f" {delimiter} ".join(string.split(delimiter))
 
-        for el in string.split():
+        elements = string.split()
+        elIndex = 0
+        while elIndex < len(elements):
+            el = elements[elIndex]
             if el == "//":
                 # if we have a comment ignore it
                 break
             if el in tokens:
                 # if el is reserved word, operator or separator
                 pif.append((el, -1))
-            elif el in "'":
-                # change to contains "'"
+            elif "'" in el:
                 # identify constant string
-                print(el)
+                constructedString = el
+                elIndex += 1
+                el = elements[elIndex]
+                while "'" not in el:
+                    if el == "//":
+                        break
+                    constructedString = constructedString + " " + el
+                    if elIndex+1 == len(elements):
+                        writeFiles(pif, identifiersST, integerST, stringST)
+                        return f"lexical error at line {index+1} at identifier {el}"
+                    elIndex += 1
+                    el = elements[elIndex]
+
+                constructedString += " "+ el
+                position = stringST.insert(constructedString)
+                if position == -1:
+                    position = stringST.lookup(constructedString)
+                pif.append(("string", position))        
             elif el.isnumeric():
                 # identify constant integer
                 position = integerST.insert(el)
@@ -66,15 +85,13 @@ def scanner(programFile, tokenFile):
                     position = identifiersST.lookup(el)
                 pif.append(("id", position))
             else:
+                print(string)
                 writeFiles(pif, identifiersST, integerST, stringST)
                 return f"lexical error at line {index+1} at identifier {el}"
+            
+            elIndex +=1
     writeFiles(pif, identifiersST, integerST, stringST)
     return "lexically correct"
-
-
-
-    
-
 
 program1 = open("p1.cat")
 program1er = open("p1err.cat")
@@ -82,7 +99,10 @@ program2 = open("p2.cat")
 program3 = open("p3.cat")
 program3string = open("p3string.cat")
 
-
 tokens = open("token.in")
 
-print(scanner(program2, tokens))
+# print(scanner(program1, tokens))
+# print(scanner(program1er, tokens))
+# print(scanner(program2, tokens))
+# print(scanner(program3, tokens))
+# print(scanner(program3string, tokens))

@@ -1,1 +1,1 @@
-cat num = ' 1234'    // spelling error as identifier 
+cat num = '1234 3 3 $ 15'
