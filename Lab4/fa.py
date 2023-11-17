@@ -48,18 +48,7 @@ def read_fa_from_file(file_path):
 
     return DFA(states, alphabet,transitions, initial_state, final_state)
 
-
-def display_fa_elements(dfa):
-    print("States:", ', '.join(dfa.states))
-    print("Alphabet:", ', '.join(dfa.alphabet))
-    print("Transitions:")
-    for (from_state, symbol), to_state in dfa.transitions.items():
-        print(f"  {from_state}, {symbol} -> {to_state}")
-    print("Initial State:", dfa.initial_state)
-    print("Final States:", ', '.join(dfa.final_states))
-
-
-if __name__ == "__main__":
+def menu_function():
     dfa = read_fa_from_file("identifier.in")
     while True:
         print("\nMenu:")
@@ -102,3 +91,6 @@ if __name__ == "__main__":
             break
         else:
             print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    menu_function()
