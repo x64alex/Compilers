@@ -1,0 +1,12 @@
+// this line represents a comment
+// dog declares a variable because dogs are not always cute
+// cat declares a constant because cats they are better than dogs
+
+// a, b given numbers and dunction min returns the cmmdc of those 2
+function cmmdc(a:number, b:number) {
+	dog d = a
+    while(a%d!=0 || b%d!=0){
+        d = d-1
+    }
+    return d
+}
