@@ -29,7 +29,19 @@ def read_fa_from_file(file_path):
     transitions = {}
     for transition in transitions_raw:
         from_state, to_state, symbol = transition.split("(")[1].split(")")[0].split(", ")
-        transitions[(from_state, symbol)] = to_state
+        if symbol not in alphabet and "-" in symbol:
+            inferiorRange = symbol.split("-")[0]
+            superiorRange = symbol.split("-")[1]
+
+            if inferiorRange.isnumeric() and superiorRange.isnumeric():
+                for value in range(int(inferiorRange), int(superiorRange) + 1):
+                    transitions[(from_state, str(value))] = to_state
+            if inferiorRange.isalpha() and superiorRange.isalpha():
+                for value in range(ord(inferiorRange), ord(superiorRange)+1):
+                    transitions[(from_state, chr(value))] = to_state
+            
+        else:
+            transitions[(from_state, symbol)] = to_state
     
     initial_state = content[3].split('=')[1].split('\n')[0]
     final_state = content[4].split('{')[1].split('}')[0].split(', ')
@@ -48,7 +60,7 @@ def display_fa_elements(dfa):
 
 
 if __name__ == "__main__":
-    dfa = read_fa_from_file("int.in")
+    dfa = read_fa_from_file("identifier.in")
     while True:
         print("\nMenu:")
         print("0. Take input from a file")
