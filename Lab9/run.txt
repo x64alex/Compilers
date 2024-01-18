@@ -1,1 +1,1 @@
-bison -d parser.y && flex scanner.lxi && gcc parser.tab.c 
+ bison -d parser.y && flex scanner.lxi && gcc parser.tab.c && ./a.out p3.cat
