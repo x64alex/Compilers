@@ -101,7 +101,7 @@ program3string = open("p3string.cat")
 
 tokens = open("token.in")
 
-# print(scanner(program1, tokens))
+print(scanner(program1, tokens))
 # print(scanner(program1er, tokens))
 # print(scanner(program2, tokens))
 # print(scanner(program3, tokens))

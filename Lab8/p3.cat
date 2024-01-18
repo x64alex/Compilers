@@ -1,0 +1,10 @@
+function sum(numberArray: number[]) {
+	cat sum = 0;
+    cat index = 0;
+    while(index<numberArray.length()){
+        sum = sum + numberArray[index];
+        index = index + 1;
+    }
+    return sum;
+}
+
