@@ -509,13 +509,22 @@ char *yytext;
 
 int count = 0;
 
+int stIndex = 0;
+
 typedef struct SymbolEntry {
     char name[50];
-    int type; // 0 identifer, 1 int, and 2 string
+    int type; // 0 identifier, 1 int, and 2 string
     struct SymbolEntry *next;
 } SymbolEntry;
 
+typedef struct PIFEntry {
+    char name[50];
+    int index;
+    struct PIFEntry *next;
+} PIFEntry;
+
 SymbolEntry *symbolTable = NULL;
+PIFEntry *pifTable = NULL;
 
 int findDuplicateIndex(char *name) {
     SymbolEntry *current = symbolTable;
@@ -533,12 +542,11 @@ int findDuplicateIndex(char *name) {
     return -1; // No duplicate found
 }
 
-void addToSymbolTable(char *name, int type) {
+int addToSymbolTable(char *name, int type) {
     int duplicateIndex = findDuplicateIndex(name);
 
     if (duplicateIndex != -1) {
-        printf("Duplicate entry for %s at index %d - ignoring\n", name, duplicateIndex);
-        return;
+        return duplicateIndex;
     }
 
     SymbolEntry *newEntry = (SymbolEntry *)malloc(sizeof(SymbolEntry));
@@ -551,10 +559,26 @@ void addToSymbolTable(char *name, int type) {
     newEntry->type = type;
     newEntry->next = symbolTable;
     symbolTable = newEntry;
+    stIndex += 1;
+
+    return stIndex - 1;
 }
 
-#line 556 "lex.yy.c"
-#line 557 "lex.yy.c"
+void addToPIF(char *name, int index) {
+    PIFEntry *newEntry = (PIFEntry *)malloc(sizeof(PIFEntry));
+    if (!newEntry) {
+        fprintf(stderr, "Memory allocation error for PIF entry.\n");
+        exit(1);
+    }
+
+    strcpy(newEntry->name, name);
+    newEntry->index = index;
+    newEntry->next = pifTable;
+    pifTable = newEntry;
+}
+
+#line 580 "lex.yy.c"
+#line 581 "lex.yy.c"
 
 #define INITIAL 0
 
@@ -771,10 +795,10 @@ YY_DECL
 		}
 
 	{
-#line 63 "lexer.l"
+#line 87 "lexer.l"
 
 
-#line 777 "lex.yy.c"
+#line 801 "lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -833,61 +857,79 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 65 "lexer.l"
-{printf("%s - reserved word\n", yytext);}
+#line 89 "lexer.l"
+{
+    addToPIF(yytext, -1);
+}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 67 "lexer.l"
-printf("%s - operator\n", yytext);
+#line 93 "lexer.l"
+{
+    addToPIF(yytext, -1);
+}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 68 "lexer.l"
-printf("%s - separator\n", yytext);
+#line 97 "lexer.l"
+{
+    addToPIF(yytext, -1); // Add separator to PIF with index -1
+}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 70 "lexer.l"
-{addToSymbolTable(yytext, 0);}
+#line 101 "lexer.l"
+{
+    addToPIF("id", addToSymbolTable(yytext, 0));
+}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 71 "lexer.l"
-{printf("Error at token %s at line %d\n", yytext, count); exit(1);}
+#line 105 "lexer.l"
+{
+    printf("Error at token %s at line %d\n", yytext, count);
+    exit(1);
+}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 73 "lexer.l"
-{addToSymbolTable(yytext, 1);}
+#line 110 "lexer.l"
+{
+    addToPIF("int", addToSymbolTable(yytext, 1));
+}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 74 "lexer.l"
-{addToSymbolTable(yytext, 2);}
+#line 114 "lexer.l"
+{
+    addToSymbolTable("string", addToSymbolTable(yytext, 2));
+}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 76 "lexer.l"
+#line 118 "lexer.l"
 {}
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 78 "lexer.l"
+#line 120 "lexer.l"
 {++count;}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 80 "lexer.l"
-{printf("Error at token %s at line %d\n", yytext, count); exit(1);}
+#line 122 "lexer.l"
+{
+    // printf("Error at token %s at line %d\n", yytext, count); // Commented out
+    exit(1);
+}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 82 "lexer.l"
+#line 127 "lexer.l"
 ECHO;
 	YY_BREAK
-#line 890 "lex.yy.c"
+#line 932 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1892,7 +1934,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 82 "lexer.l"
+#line 127 "lexer.l"
 
 
 int yywrap() {
@@ -1900,15 +1942,26 @@ int yywrap() {
 }
 
 void printSymbolTable() {
-    SymbolEntry *current = symbolTable;
-    printf("\nSymbol Table:\n");
+SymbolEntry *current = symbolTable;
+    SymbolEntry *stack = NULL; // Use a stack to reverse the order
+
+    printf("\nReversed Symbol Table:\n");
     printf("| %-5s | %-20s | %-15s |\n", "Index", "Name", "Type");
     printf("|--------|----------------------|------------------|\n");
 
     int index = 0;
     while (current != NULL) {
+        // Push current entry onto the stack
+        SymbolEntry *temp = current->next;
+        current->next = stack;
+        stack = current;
+        current = temp;
+    }
+
+    // Print entries from the stack
+    while (stack != NULL) {
         char typeString[20];
-        switch (current->type) {
+        switch (stack->type) {
             case 0:
                 strcpy(typeString, "Identifier");
                 break;
@@ -1923,11 +1976,46 @@ void printSymbolTable() {
                 break;
         }
 
-        printf("| %-5d | %-20s | %-15s |\n", index, current->name, typeString);
-        current = current->next;
+        printf("| %-5d | %-20s | %-15s |\n", index, stack->name, typeString);
+
+        // Pop entry from the stack
+        SymbolEntry *temp = stack->next;
+        stack->next = current;
+        current = stack;
+        stack = temp;
+
         index++;
     }
 }
+
+void printPIF() {
+    PIFEntry *current = pifTable;
+    PIFEntry *stack = NULL; // Use a stack to reverse the order
+
+    printf("\nReversed PIF:\n");
+    printf("| %-20s | %-15s |\n", "Name", "Index");
+    printf("|----------------------|------------------|\n");
+
+    while (current != NULL) {
+        // Push current entry onto the stack
+        PIFEntry *temp = current->next;
+        current->next = stack;
+        stack = current;
+        current = temp;
+    }
+
+    // Print entries from the stack
+    while (stack != NULL) {
+        printf("| %-20s | %-15d |\n", stack->name, stack->index);
+
+        // Pop entry from the stack
+        PIFEntry *temp = stack->next;
+        stack->next = current;
+        current = stack;
+        stack = temp;
+    }
+}
+
 
 int main(int argc, char **argv) {
     if (argc > 1)
@@ -1940,6 +2028,7 @@ int main(int argc, char **argv) {
     }
 
     printSymbolTable();
+    printPIF();
 
     // Cleanup code, if needed
     SymbolEntry *current = symbolTable;
@@ -1949,10 +2038,18 @@ int main(int argc, char **argv) {
         current = temp;
     }
 
+    PIFEntry *currentPIF = pifTable;
+    while (currentPIF != NULL) {
+        PIFEntry *tempPIF = currentPIF->next;
+        free(currentPIF);
+        currentPIF = tempPIF;
+    }
+
     if (argc > 1) {
         fclose(yyin);
     }
 
     return 0;
 }
+
 
