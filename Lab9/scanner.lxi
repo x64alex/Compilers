@@ -1,9 +1,9 @@
 %{
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <string.h>
-    #define YYDEBUG 1
-    int lines = 1;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#define YYDEBUG 1
+int lines = 1;
 %}
 
 %option noyywrap
@@ -20,11 +20,9 @@ BAD_IDENTIFIER ({DIGIT})+({LETTER})+({LETTER}|{DIGIT})*
 
 %%
 
-"prog" { printf("%s - reserved word\n", yytext); return PROG; }
+"main" { printf("%s - reserved word\n", yytext); return MAIN; }
 "int" { printf("%s - reserved word\n", yytext); return INT; }
-"str" { printf("%s - reserved word\n", yytext); return STR; }
-"char" { printf("%s - reserved word\n", yytext); return CHAR; }
-"read" { printf("%s - reserved word\n", yytext); return READ; }
+"str" { printf("%s - reserved word\n", yytext); return STRING; }
 "if" { printf("%s - reserved word\n", yytext); return IF; }
 "else" { printf("%s - reserved word\n", yytext); return ELSE; }
 "print" { printf("%s - reserved word\n", yytext); return PRINT; }
@@ -44,14 +42,17 @@ BAD_IDENTIFIER ({DIGIT})+({LETTER})+({LETTER}|{DIGIT})*
 ">" { printf("%s - operator\n", yytext); return BIGGER; }
 "sqrt" { printf("%s - operator\n", yytext); return SQRT; }
 
-"[" { printf("%s - separator\n", yytext); return SQBRACKETOPEN; }
-"]" { printf("%s - separator\n", yytext); return SQBRACKETCLOSE; } 
+"[" { printf("%s - separator\n", yytext); return SQUAREBRACKETOPEN; }
+"]" { printf("%s - separator\n", yytext); return SQUAREBBRACKETCLOSE; } 
 ";" { printf("%s - separator\n", yytext); return SEMICOLON; } 
-"(" { printf("%s - separator\n", yytext); return OPEN; } 
-")" { printf("%s - separator\n", yytext); return CLOSE; }
-"{" { printf("%s - separator\n", yytext); return BRACKETOPEN; } 
-"}" { printf("%s - separator\n", yytext); return BRACKETCLOSE; } 
+"(" { printf("%s - separator\n", yytext); return BRACKETOPEN; } 
+")" { printf("%s - separator\n", yytext); return BRACKETCLOSE; }
+"{" { printf("%s - separator\n", yytext); return CURLYBRACKETOPEN; } 
+"}" { printf("%s - separator\n", yytext); return CURLYBRACKETCLOSE; } 
 "," { printf("%s - separator\n", yytext); return COMMA; }
+
+"&&" { printf("%s - separator\n", yytext); return AND; }
+"||" { printf("%s - separator\n", yytext); return OR; }
 
 {IDENTIFIER} { printf("%s - identifier\n", yytext); return IDENTIFIER; }
 

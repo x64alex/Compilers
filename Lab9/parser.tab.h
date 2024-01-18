@@ -39,9 +39,9 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     PROG = 258,
+     MAIN = 258,
      INT = 259,
-     STR = 260,
+     STRING = 260,
      CHAR = 261,
      READ = 262,
      IF = 263,
@@ -61,23 +61,25 @@
      EQQ = 277,
      BIGGER = 278,
      SQRT = 279,
-     SQBRACKETOPEN = 280,
-     SQBRACKETCLOSE = 281,
+     SQUAREBRACKETOPEN = 280,
+     SQUAREBBRACKETCLOSE = 281,
      SEMICOLON = 282,
-     OPEN = 283,
-     CLOSE = 284,
-     BRACKETOPEN = 285,
-     BRACKETCLOSE = 286,
+     BRACKETOPEN = 283,
+     BRACKETCLOSE = 284,
+     CURLYBRACKETOPEN = 285,
+     CURLYBRACKETCLOSE = 286,
      COMMA = 287,
      IDENTIFIER = 288,
      INTCONSTANT = 289,
-     STRINGCONSTANT = 290
+     STRINGCONSTANT = 290,
+     AND = 291,
+     OR = 292
    };
 #endif
 /* Tokens.  */
-#define PROG 258
+#define MAIN 258
 #define INT 259
-#define STR 260
+#define STRING 260
 #define CHAR 261
 #define READ 262
 #define IF 263
@@ -97,17 +99,19 @@
 #define EQQ 277
 #define BIGGER 278
 #define SQRT 279
-#define SQBRACKETOPEN 280
-#define SQBRACKETCLOSE 281
+#define SQUAREBRACKETOPEN 280
+#define SQUAREBBRACKETCLOSE 281
 #define SEMICOLON 282
-#define OPEN 283
-#define CLOSE 284
-#define BRACKETOPEN 285
-#define BRACKETCLOSE 286
+#define BRACKETOPEN 283
+#define BRACKETCLOSE 284
+#define CURLYBRACKETOPEN 285
+#define CURLYBRACKETCLOSE 286
 #define COMMA 287
 #define IDENTIFIER 288
 #define INTCONSTANT 289
 #define STRINGCONSTANT 290
+#define AND 291
+#define OR 292
 
 
 

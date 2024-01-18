@@ -1,14 +1,21 @@
-prog {
-a (int), b (int), c (int), smallest (int);
-read(a);
-read(b);
-read(c);
-smallest = a;
-if smallest > b {
-	smallest = b;
-};
-if smallest > c {
-	smallest = c;
-};
-print(smallest);
+main() {
+	int a, int b, int c, int minimum;
+	a = 2;
+	b = 4;
+	c = 1;
+	minimum = a;
+
+	if(b<a){
+		if(b<c){
+			minimum = b;
+		};
+	};
+
+	if(c<a){
+		if(c<b){
+			minimum = c;
+		};
+	};
+	print(minimum);
+
 }

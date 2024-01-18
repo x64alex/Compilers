@@ -8,9 +8,9 @@ int yyerror(char *s);
 #define YYDEBUG 1
 %}
 
-%token PROG;
+%token MAIN;
 %token INT;
-%token STR;
+%token STRING;
 %token CHAR;
 %token READ;
 %token IF;
@@ -32,23 +32,26 @@ int yyerror(char *s);
 %token BIGGER;
 %token SQRT;
 
-%token SQBRACKETOPEN;
-%token SQBRACKETCLOSE;
+%token SQUAREBRACKETOPEN;
+%token SQUAREBBRACKETCLOSE;
 %token SEMICOLON;
-%token OPEN;
-%token CLOSE;
 %token BRACKETOPEN;
 %token BRACKETCLOSE;
+%token CURLYBRACKETOPEN;
+%token CURLYBRACKETCLOSE;
 %token COMMA;
 
 %token IDENTIFIER;
 %token INTCONSTANT;
 %token STRINGCONSTANT;
 
-%start Program
+%token AND;
+%token OR;
+
+%start Main
 
 %%
-Program : PROG BRACKETOPEN CompoundStatement BRACKETCLOSE     { printf("Program -> prog { CompoundStatement }\n"); }
+Main : MAIN BRACKETOPEN BRACKETCLOSE CURLYBRACKETOPEN CompoundStatement CURLYBRACKETCLOSE     { printf("Main -> MAIN() { CompoundStatement }\n"); }
         ;
 CompoundStatement : Statement SEMICOLON CompoundStatement     { printf("CompoundStatement -> Statement ; CompoundStatement\n"); }
                   | Statement SEMICOLON                       { printf("CompoundStatement -> Statement ;\n"); }
@@ -58,14 +61,12 @@ Statement : DeclarationStatement     { printf("Statement -> DeclarationStatement
           | IfStatement     { printf("Statement -> IfStatement\n"); }
           | WhileStatement     { printf("Statement -> WhileStatement\n"); }
           | PrintStatement     { printf("Statement -> PrintStatement\n"); }
-          | ReadStatement     { printf("Statement -> ReadStatement\n"); }
           ;
-DeclarationStatement : IDENTIFIER OPEN Type CLOSE COMMA DeclarationStatement     { printf("DeclarationStatement -> IDENTIFIER ( Type ) , DeclarationStatement\n"); }
-                     | IDENTIFIER OPEN Type CLOSE     { printf("DeclarationStatement -> IDENTIFIER ( Type )\n"); }
+DeclarationStatement : Type IDENTIFIER  COMMA DeclarationStatement     { printf("DeclarationStatement -> IDENTIFIER ( Type ) , DeclarationStatement\n"); }
+                     | Type IDENTIFIER       { printf("DeclarationStatement -> IDENTIFIER ( Type )\n"); }
                      ;
 Type : INT     { printf("Type -> int\n"); }
-     | STR     { printf("Type -> str\n"); }
-     | CHAR     { printf("Type -> char\n"); }
+     | STRING     { printf("Type -> str\n"); }
      | ARR     { printf("Type -> arr\n"); }
      ;
 AssignmentStatement : IDENTIFIER EQ Expression     { printf("AssignmentStatement -> IDENTIFIER = Expression\n"); }
@@ -79,30 +80,35 @@ Term : Term TIMES Factor     { printf("Term -> Term * Factor\n"); }
      | Term DIV Factor     { printf("Term -> Term / Factor\n"); }
      | Factor     { printf("Term -> Factor\n"); }
      ;
-Factor : OPEN Expression CLOSE     { printf("Factor -> ( Expression )\n"); }
+Factor : BRACKETOPEN Expression BRACKETCLOSE     { printf("Factor -> ( Expression )\n"); }
        | IDENTIFIER     { printf("Factor -> IDENTIFIER\n"); }
        | INTCONSTANT     { printf("Factor -> INTCONSTANT\n"); }
        | MINUS IDENTIFIER     { printf("Factor -> - IDENTIFIER\n"); }
-       | SQRT OPEN Expression CLOSE     { printf("Factor -> sqrt ( Expression )\n"); }
+       | SQRT BRACKETOPEN Expression BRACKETCLOSE     { printf("Factor -> sqrt ( Expression )\n"); }
        ;
-ArrayStatement : SQBRACKETOPEN SQBRACKETCLOSE    { printf("ArrayStatement -> []\n"); }
-               | SQBRACKETOPEN ExpressionList SQBRACKETCLOSE    { printf("ArrayStatement -> [ ExpressionList ]\n"); }
+ArrayStatement : SQUAREBRACKETOPEN SQUAREBBRACKETCLOSE    { printf("ArrayStatement -> []\n"); }
+               | SQUAREBRACKETOPEN ExpressionList SQUAREBBRACKETCLOSE    { printf("ArrayStatement -> [ ExpressionList ]\n"); }
                ;
 ExpressionList : Expression COMMA ExpressionList    { printf("ExpressionList -> Expression , ExpressionList\n"); }
                | Expression    { printf("ExpressionList -> Expression\n"); }
                ;
-IfStatement : IF Condition BRACKETOPEN CompoundStatement BRACKETCLOSE  { printf("IfStatement -> if Expression { CompoundStatement }\n"); }
-            | IF Condition BRACKETOPEN CompoundStatement BRACKETCLOSE ELSE BRACKETOPEN CompoundStatement BRACKETCLOSE  { printf("IfStatement -> if Expression { CompoundStatement } else { CompoundStatement }\n"); }
+IfStatement : IF BRACKETOPEN Condition BRACKETCLOSE CURLYBRACKETOPEN CompoundStatement CURLYBRACKETCLOSE  { printf("IfStatement -> if Expression { CompoundStatement }\n"); }
+
+
             ;
 WhileStatement : WHILE Condition BRACKETOPEN CompoundStatement BRACKETCLOSE  { printf("WhileStatement -> while Expression { CompoundStatement }\n"); }
-               ;
-PrintStatement : PRINT OPEN Expression CLOSE     { printf("PrintStatement -> print ( Expression )\n"); }
-               | PRINT OPEN STRINGCONSTANT CLOSE     { printf("PrintStatement -> print ( STRINGCONSTANT )\n"); }
-               ;
-ReadStatement : READ OPEN IDENTIFIER CLOSE     { printf("ReadStatement -> read ( IDENTIFIER )\n"); }
               ;
+PrintStatement : PRINT BRACKETOPEN Expression BRACKETCLOSE     { printf("PrintStatement -> print ( Expression )\n"); }
 Condition : Expression Relation Expression     { printf("Condition -> Expression Relation Expression\n"); }
           ;
+
+LogicCondition : Condition LogicRelation Condition     { printf("Condition -> Expression Relation Expression\n"); }
+        | Condition
+          ;
+
+LogicRelation : AND     { printf("LogicRelation -> and\n"); }
+         | OR     { printf("LogicRelation -> or\n"); }
+
 Relation : LESS     { printf("Relation -> <\n"); }
          | LESSEQ     { printf("Relation -> <=\n"); }
          | EQQ     { printf("Relation -> ==\n"); }
