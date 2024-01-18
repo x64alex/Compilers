@@ -1,0 +1,1 @@
+flex lexer.l && gcc lex.yy.c && ./a.out p3.cat
