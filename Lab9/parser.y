@@ -31,6 +31,8 @@ int yyerror(char *s);
 %token EQQ;
 %token BIGGER;
 %token SQRT;
+%token REMAINDER;
+
 
 %token SQUAREBRACKETOPEN;
 %token SQUAREBBRACKETCLOSE;
@@ -96,7 +98,7 @@ IfStatement : IF BRACKETOPEN Condition BRACKETCLOSE CURLYBRACKETOPEN CompoundSta
 
 
             ;
-WhileStatement : WHILE Condition BRACKETOPEN CompoundStatement BRACKETCLOSE  { printf("WhileStatement -> while Expression { CompoundStatement }\n"); }
+WhileStatement : WHILE BRACKETOPEN Condition BRACKETCLOSE CURLYBRACKETOPEN CompoundStatement CURLYBRACKETCLOSE  { printf("WhileStatement -> while Expression { CompoundStatement }\n"); }
               ;
 PrintStatement : PRINT BRACKETOPEN Expression BRACKETCLOSE     { printf("PrintStatement -> print ( Expression )\n"); }
 Condition : Expression Relation Expression     { printf("Condition -> Expression Relation Expression\n"); }

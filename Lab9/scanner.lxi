@@ -33,12 +33,13 @@ BAD_IDENTIFIER ({DIGIT})+({LETTER})+({LETTER}|{DIGIT})*
 "-" { printf("%s - operator\n", yytext); return MINUS; }
 "*" { printf("%s - operator\n", yytext); return TIMES; }
 "/" { printf("%s - operator\n", yytext); return DIV; }
+"%" { printf("%s - operator\n", yytext); return REMAINDER; }
 "<" { printf("%s - operator\n", yytext); return LESS; }
 "<=" { printf("%s - operator\n", yytext); return LESSEQ; }
 "=" { printf("%s - operator\n", yytext); return EQ; }
 ">=" { printf("%s - operator\n", yytext); return BIGGEREQ; }
 "==" { printf("%s - operator\n", yytext); return EQQ; }
-"<>" { printf("%s - operator\n", yytext); return NEQ; }
+"!=" { printf("%s - operator\n", yytext); return NEQ; }
 ">" { printf("%s - operator\n", yytext); return BIGGER; }
 "sqrt" { printf("%s - operator\n", yytext); return SQRT; }
 
