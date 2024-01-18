@@ -1,0 +1,2 @@
+cat 3num = 1234;    // spelling error as identifier 
+dog 3miau = 1234;   // Variable or constant declaration cannot start with a number

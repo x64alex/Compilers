@@ -1,0 +1,8 @@
+function cmmdc(a:number, b:number) {
+	dog d = a;
+    dog mixa = "cadca";
+    while(a%d!=0 || b%d!=0){
+        d = d-1;
+    }
+    return d;
+}
