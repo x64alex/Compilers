@@ -66,6 +66,7 @@ Statement : DeclarationStatement     { printf("Statement -> DeclarationStatement
           ;
 DeclarationStatement : Type IDENTIFIER  COMMA DeclarationStatement     { printf("DeclarationStatement -> IDENTIFIER ( Type ) , DeclarationStatement\n"); }
                      | Type IDENTIFIER       { printf("DeclarationStatement -> IDENTIFIER ( Type )\n"); }
+                     | Type SQUAREBRACKETOPEN SQUAREBBRACKETCLOSE IDENTIFIER       { printf("DeclarationStatement -> IDENTIFIER ( Type[] )\n"); }
                      ;
 Type : INT     { printf("Type -> int\n"); }
      | STRING     { printf("Type -> str\n"); }
@@ -76,6 +77,7 @@ AssignmentStatement : IDENTIFIER EQ Expression     { printf("AssignmentStatement
                     ;
 Expression : Expression PLUS Term     { printf("Expression -> Expression + Term\n"); }
            | Expression MINUS Term     { printf("Expression -> Expression - Term\n"); }
+           | Expression PLUS ArrayStatement
            | Term     { printf("Expression -> Term\n"); }
            ;
 Term : Term TIMES Factor     { printf("Term -> Term * Factor\n"); }
@@ -89,7 +91,7 @@ Factor : BRACKETOPEN Expression BRACKETCLOSE     { printf("Factor -> ( Expressio
        | SQRT BRACKETOPEN Expression BRACKETCLOSE     { printf("Factor -> sqrt ( Expression )\n"); }
        ;
 ArrayStatement : SQUAREBRACKETOPEN SQUAREBBRACKETCLOSE    { printf("ArrayStatement -> []\n"); }
-               | SQUAREBRACKETOPEN ExpressionList SQUAREBBRACKETCLOSE    { printf("ArrayStatement -> [ ExpressionList ]\n"); }
+               | IDENTIFIER SQUAREBRACKETOPEN IDENTIFIER SQUAREBBRACKETCLOSE    { printf("ArrayStatement -> [ ExpressionList ]\n"); }
                ;
 ExpressionList : Expression COMMA ExpressionList    { printf("ExpressionList -> Expression , ExpressionList\n"); }
                | Expression    { printf("ExpressionList -> Expression\n"); }

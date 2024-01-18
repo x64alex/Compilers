@@ -1,10 +1,17 @@
-function sum(numberArray: number[]) {
-	cat sum = 0;
-    cat index = 0;
-    while(index<numberArray.length()){
-        sum = sum + numberArray[index];
-        index = index + 1;
-    }
-    return sum;
-}
+main() {
+	int[] a;
+    int length, int index;
+    length = 10;
+    index = 0;
 
+    int sum;
+    sum = 0;
+
+    while(index<length){
+        sum = sum + a[index];
+
+        index = index + 1;
+    };
+
+    print(sum);
+}
